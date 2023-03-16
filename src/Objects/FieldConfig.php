@@ -6,6 +6,9 @@ namespace OValidator\Objects;
 
 use OValidator\Interfaces\Validator;
 
+/**
+ * One field config container
+ */
 class FieldConfig
 {
     private string $description;
@@ -25,6 +28,12 @@ class FieldConfig
     {
         $this->description = $description;
         $this->state = $state;
+
+        foreach ($validators as $validator) {
+            if (!($validator instanceof Validator)) {
+                throw new \Exception(get_class($validator) . ' is not instance of Validator');
+            }
+        }
         $this->validators = $validators;
     }
 

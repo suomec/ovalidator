@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace OValidator\Interfaces;
 
 /**
- * Collection of validators combined together
+ * Collection of validators combined
  */
 interface Collection
 {

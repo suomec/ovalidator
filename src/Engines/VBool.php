@@ -4,22 +4,26 @@ declare(strict_types=1);
 
 namespace OValidator\Engines;
 
-use OValidator\Exceptions\ValidatorException;
+use OValidator\Exceptions\EngineException;
 use OValidator\Objects\ValidatorBase;
 
 /**
- * Field should be boolean
+ * Field should be boolean. Returns bool value
  */
 class VBool extends ValidatorBase
 {
     public function check(mixed $value): mixed
     {
-        if (in_array($value, [0, '0', false, 'false'], true)) {
+        if (is_string($value)) {
+            $value = strtolower($value);
+        }
+
+        if (in_array($value, [0, '0', false, 'false', 'off', 'no'], true)) {
             $value = false;
-        } elseif (in_array($value, [1, '1', true, 'true'], true)) {
+        } elseif (in_array($value, [1, '1', true, 'true', 'on', 'yes'], true)) {
             $value = true;
         } else {
-            throw new ValidatorException($this->_('should have boolean format'));
+            throw new EngineException($this->_('should have boolean format'));
         }
 
         return $value;

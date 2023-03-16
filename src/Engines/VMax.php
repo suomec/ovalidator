@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace OValidator\Engines;
 
-use OValidator\Exceptions\ValidatorException;
+use OValidator\Exceptions\EngineException;
 use OValidator\Objects\ValidatorBase;
 
 /**
@@ -46,13 +46,13 @@ class VMax extends ValidatorBase
                 break;
 
             default:
-                throw new ValidatorException($this->_('checks only numbers, strings and arrays, got: {type}', [
+                throw new EngineException($this->_('checks only numbers, strings and arrays, got: {type}', [
                     'type' => gettype($value),
                 ]));
         }
 
         if ($size > $this->maxSize) {
-            throw new ValidatorException($errorMessage);
+            throw new EngineException($errorMessage);
         }
 
         return $value;
@@ -60,6 +60,6 @@ class VMax extends ValidatorBase
 
     public function getDescription(): string
     {
-        return "Max count/size/length: {$this->maxSize}";
+        return "Max value/length: {$this->maxSize}";
     }
 }

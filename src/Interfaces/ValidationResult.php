@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace OValidator\Interfaces;
 
 /**
- * Object fields manipulator
+ * Container for values and errors
  */
 interface ValidationResult
 {

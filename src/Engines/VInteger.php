@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace OValidator\Engines;
 
-use OValidator\Exceptions\ValidatorException;
+use OValidator\Exceptions\EngineException;
 use OValidator\Objects\ValidatorBase;
 
 /**
@@ -15,21 +15,25 @@ class VInteger extends ValidatorBase
     public function check(mixed $value): mixed
     {
         if (!is_numeric($value)) {
-            throw new ValidatorException($this->_('not numeric'));
+            throw new EngineException($this->_('not numeric'));
         }
 
         if (is_float($value)) {
-            throw new ValidatorException($this->_('is float'));
+            throw new EngineException($this->_('is float'));
         }
 
-        // trailing "+", ('+17' -> '17')
+        // "+" before number, ('+17' -> '17')
         if (is_string($value) && isset($value[0]) && $value[0] === '+') {
             $value = substr($value, 1);
         }
 
+        if (is_string($value)) {
+            $value = trim($value);
+        }
+
         // float without .XXX part
         if ((string)(int)$value !== (string)$value) {
-            throw new ValidatorException($this->_('is float'));
+            throw new EngineException($this->_('may be float'));
         }
 
         return (int)$value;
@@ -37,6 +41,6 @@ class VInteger extends ValidatorBase
 
     public function getDescription(): string
     {
-        return "Integer value";
+        return "integer value";
     }
 }

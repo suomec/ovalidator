@@ -4,20 +4,11 @@ declare(strict_types=1);
 
 namespace OValidator\Interfaces;
 
-use Psr\Http\Message\ServerRequestInterface;
-
 /**
  * Input container
  */
 interface Form
 {
-    /**
-     * Add input variables from request
-     * @param ServerRequestInterface $request
-     * @return Form
-     */
-    public function fromRequest(ServerRequestInterface $request): Form;
-
     /**
      * Add input variables from user array
      * @param array<string, mixed> $data
@@ -26,6 +17,7 @@ interface Form
     public function fromArray(array $data): Form;
 
     /**
+     * Get user data
      * @return array<string, mixed> All input data
      */
     public function export(): array;

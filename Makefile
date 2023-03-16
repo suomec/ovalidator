@@ -13,7 +13,7 @@ check:
 	./var/vendor/bin/phpstan --autoload-file=./var/vendor/autoload.php analyze --level max src tests
 
 test:
-	./var/vendor/bin/phpunit --bootstrap=./tests/bootstrap.php --colors=always ./tests
+	./var/vendor/bin/phpunit --colors=always ./tests
 
 filter-test:
-	./var/vendor/bin/phpunit --bootstrap=./tests/bootstrap.php --colors=always ./tests  --filter "$(FILTER)"
+	./var/vendor/bin/phpunit --colors=always ./tests  --filter "$(FILTER)"

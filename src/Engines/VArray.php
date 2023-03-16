@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace OValidator\Engines;
 
-use OValidator\Exceptions\ValidatorException;
+use OValidator\Exceptions\EngineException;
 use OValidator\Interfaces\Validator;
 use OValidator\Objects\ValidatorBase;
 
 /**
- * Field should be array of elements
+ * Field should be array of items
  */
 class VArray extends ValidatorBase
 {
@@ -19,8 +19,8 @@ class VArray extends ValidatorBase
     private bool $keepOriginalKeys;
 
     /**
-     * @param Validator[]|null $cellValidators Every item validators
-     * @param bool $onlyUnique Keep only unique items of array
+     * @param Validator[]|null $cellValidators List of validators for every item
+     * @param bool $onlyUnique Keep only unique items in result array
      * @param bool $keepOriginalKeys Keep original keys of array
      */
     public function __construct(?array $cellValidators = null, bool $onlyUnique = false, bool $keepOriginalKeys = false)
@@ -45,7 +45,7 @@ class VArray extends ValidatorBase
     public function check(mixed $value): mixed
     {
         if (!is_array($value)) {
-            throw new ValidatorException($this->_('should be array'));
+            throw new EngineException($this->_('should be array'));
         }
 
         if (!$this->keepOriginalKeys) {

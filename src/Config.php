@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace OValidator;
 
-use OValidator\Exceptions\ValidatorException;
+use OValidator\Exceptions\EngineException;
 use OValidator\Interfaces\Collection;
 use OValidator\Interfaces\Config as ConfigInterface;
 use OValidator\Interfaces\I18n;
 use OValidator\Interfaces\ValidationResult;
-use OValidator\Interfaces\Validator;
 use OValidator\Objects\FieldConfig;
 use OValidator\Objects\Result;
 use OValidator\Objects\State;
@@ -111,17 +110,13 @@ class Config implements ConfigInterface
 
         $newValue = $values[$name];
         foreach ($config->getValidators() as $validator) {
-            if (!($validator instanceof Validator)) {
-                throw new \Exception(get_class($validator) . ' is not instance of Validator');
-            }
-
             if ($this->i18n !== null) {
                 $validator->setI18n($this->i18n);
             }
 
             try {
                 $newValue = $validator->check($newValue);
-            } catch (ValidatorException $e) {
+            } catch (EngineException $e) {
                 $result->addError($name, $e->getMessage());
                 return null;
             }

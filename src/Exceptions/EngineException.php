@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace OValidator\Exceptions;
 
-class ValidatorException extends \Exception
+class EngineException extends \Exception
 {
 }

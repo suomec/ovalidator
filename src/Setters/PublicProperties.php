@@ -9,100 +9,27 @@ use OValidator\Interfaces\ValidationResult;
 use OValidator\Objects\Result;
 
 /**
- * Setter only for public properties of object
+ * Setter for typed and not typed public properties of object via reflection
  */
 class PublicProperties implements Setter
 {
-    /** @var array<string, array<mixed>> */
+    /** @var array<string, array<string, ?\ReflectionNamedType>> */
     public static array $reflectionCache = [];
 
-    /**
-     * Returns object public properties
-     * @param object $object Object
-     * @return string[] Properties names
-     */
-    private function getPublicProperties(object $object): array
+    public function setProperties(object $object, array $validatedValues): ?ValidationResult
     {
-        if (isset(self::$reflectionCache[get_class($object)])) {
-            //@phpstan-ignore-next-line
-            return self::$reflectionCache[get_class($object)]['properties'];
-        }
-
-        $r = new \ReflectionClass($object);
-        $rProperties = $r->getProperties(\ReflectionProperty::IS_PUBLIC);
-
-        $properties = [];
-        $types = [];
-        foreach ($rProperties as $property) {
-            $properties[] = $property->getName();
-            $types[$property->getName()] = $property->getType();
-        }
-
-        self::$reflectionCache[get_class($object)] = [
-            'properties' => $properties,
-            'types' => $types,
-        ];
-
-        return $properties;
-    }
-
-    public function setProperties(object $object, array $values): ?ValidationResult
-    {
-        $properties = $this->getPublicProperties($object);
-        $types = self::$reflectionCache[get_class($object)]['types'];
         $result = new Result();
 
-        foreach ($properties as $property) {
-            if (!array_key_exists($property, $values)) {
-                $result->addError($property, 'field not found in validated request');
+        $fields = $this->getPublicProperties($object);
+        foreach ($fields as $field => $type) {
+            $v = $this->getValueToSet($field, $validatedValues, $type);
+            if ($v['error'] !== null) {
+                $result->addError($field, $v['error']);
+
                 continue;
             }
 
-            $value = $values[$property];
-
-            /** @var \ReflectionNamedType $objectPropertyType|null */
-            //@phpstan-ignore-next-line
-            $objectPropertyType = $types[$property];
-
-            if ($objectPropertyType !== null) {
-                // for typed property check if type is correct
-                $valueType = gettype($value);
-                $isObject = false;
-                if ($valueType === 'object') {
-                    //@phpstan-ignore-next-line
-                    $valueType = get_class($value);
-                    $isObject = true;
-                }
-                if ($valueType === 'integer') {
-                    $valueType = 'int';
-                }
-                if ($valueType === 'boolean') {
-                    $valueType = 'bool';
-                }
-
-                if ($objectPropertyType->allowsNull() && $value === null) {
-                    $object->$property = null;
-                    continue;
-                } elseif (!$objectPropertyType->allowsNull() && $value === null) {
-                    $result->addError($property, "doesn't not allow NULL values");
-                    continue;
-                }
-
-                if ($isObject && is_string($valueType)) {
-                    $interfaces = class_implements($valueType);
-                    if (is_array($interfaces) && in_array($objectPropertyType->getName(), $interfaces, true)) {
-                        $object->$property = $value;
-                        continue;
-                    }
-                }
-
-                if ($objectPropertyType->getName() !== $valueType) {
-                    $result->addError($property, 'assign types mismatch');
-                    continue;
-                }
-            }
-
-            $object->$property = $value;
+            $object->$field = $v['value'];
         }
 
         if ($result->hasErrors()) {
@@ -110,5 +37,95 @@ class PublicProperties implements Setter
         }
 
         return null;
+    }
+
+    /**
+     * @param string $field
+     * @param array<string, mixed> $validatedValues
+     * @param \ReflectionNamedType|null $dstType
+     * @return array{error: ?string, value: mixed}
+     */
+    private function getValueToSet(string $field, array $validatedValues, ?\ReflectionNamedType $dstType): array
+    {
+        if (!array_key_exists($field, $validatedValues)) {
+            if ($dstType !== null && $dstType->allowsNull()) {
+                return ['error' => null, 'value' => null];
+            }
+
+            return ['error' => 'not found in validated request and not nullable', 'value' => null];
+        }
+
+        $validatedInput = $validatedValues[$field];
+
+        $srcType = gettype($validatedInput);
+        $srcType = str_replace(['integer', 'boolean', 'double'], ['int', 'bool', 'float'], $srcType);
+
+        if ($dstType === null) {
+            // not typed object property
+            return ['error' => null, 'value' => $validatedInput];
+        }
+
+        $dstTypeName = $dstType->getName();
+
+        if (is_object($validatedInput)) {
+            // same class
+            if ($dstTypeName === get_class($validatedInput)) {
+                return ['error' => null, 'value' => $validatedInput];
+            }
+
+            $interfaces = class_implements(get_class($validatedInput));
+            if (is_array($interfaces) && in_array($dstTypeName, $interfaces, true)) {
+                return ['error' => null, 'value' => $validatedInput];
+            }
+
+            return ['error' => "object value can't be applied", 'value' => null];
+        }
+
+        if ($dstType->allowsNull() && $validatedInput === null) {
+            return ['error' => null, 'value' => null];
+        }
+
+        if (!$dstType->allowsNull() && $validatedInput === null) {
+            return ['error' => "doesn't not allow NULL values", 'value' => null];
+        }
+
+        if ($dstTypeName !== $srcType) {
+            return [
+                'error' => sprintf('assign types mismatch (%s != %s)', $dstTypeName, $srcType),
+                'value' => null,
+            ];
+        }
+
+        return ['error' => null, 'value' => $validatedInput];
+    }
+
+    /**
+     * Returns object public properties
+     * @param object $object Object
+     * @return array<string, ?\ReflectionNamedType> Properties names and types
+     */
+    private function getPublicProperties(object $object): array
+    {
+        $class = get_class($object);
+
+        if (isset(self::$reflectionCache[$class])) {
+            return self::$reflectionCache[$class];
+        }
+
+        $rProperties = (new \ReflectionClass($object))->getProperties(\ReflectionProperty::IS_PUBLIC);
+        $properties = [];
+
+        foreach ($rProperties as $property) {
+            $type = $property->getType();
+            if (!($type instanceof \ReflectionNamedType)) {
+                $type = null;
+            }
+
+            $properties[$property->getName()] = $type;
+        }
+
+        self::$reflectionCache[$class] = $properties;
+
+        return $properties;
     }
 }

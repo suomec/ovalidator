@@ -2,24 +2,26 @@
 
 declare(strict_types=1);
 
-namespace OValidator\Engines;
+namespace OValidator\Engines\VImage;
 
 /**
  * Container for image data
  */
-class VImageDescriptor
+final class Descriptor
 {
     private string $content;
     private int $type;
     private int $width;
     private int $height;
+    private \GdImage $resource;
 
-    public function __construct(string $content, int $type, int $width, int $height)
+    public function __construct(string $content, int $type, int $width, int $height, \GdImage $resource)
     {
         $this->content = $content;
         $this->type = $type;
         $this->width = $width;
         $this->height = $height;
+        $this->resource = $resource;
     }
 
     /**
@@ -60,5 +62,13 @@ class VImageDescriptor
     public function setContent(string $content): void
     {
         $this->content = $content;
+    }
+
+    /**
+     * @return \GdImage
+     */
+    public function getResource(): \GdImage
+    {
+        return $this->resource;
     }
 }

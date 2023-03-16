@@ -10,9 +10,9 @@ namespace OValidator\Interfaces;
 interface Validator
 {
     /**
-     * Main check
+     * Main check and transformation of input
      * @param mixed $value Input data
-     * @return mixed Result
+     * @return mixed Result (input or modified input)
      */
     public function check(mixed $value): mixed;
 

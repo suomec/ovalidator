@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace OValidator\Engines;
 
-use OValidator\Exceptions\ValidatorException;
+use OValidator\Exceptions\EngineException;
 use OValidator\Objects\ValidatorBase;
 
 /**
@@ -22,7 +22,7 @@ class VInstanceOf extends ValidatorBase
     public function check(mixed $value): mixed
     {
         if (!($value instanceof $this->needType)) {
-            throw new ValidatorException($this->_('should be instance of: {type}', [
+            throw new EngineException($this->_('should be instance of {type}', [
                 'type' => $this->needType,
             ]));
         }
@@ -32,6 +32,6 @@ class VInstanceOf extends ValidatorBase
 
     public function getDescription(): string
     {
-        return 'Instance of: ' . $this->needType;
+        return 'instance of: ' . $this->needType;
     }
 }

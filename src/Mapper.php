@@ -29,6 +29,7 @@ class Mapper
     /**
      * Apply validated fields to public object properties
      * @param object $object Some object with public fields
+     * @param Setter $setter Setter object
      * @return ?ValidationResult Validation result object on error or null if successful
      */
     public function toObject(object $object, Setter $setter): ?ValidationResult

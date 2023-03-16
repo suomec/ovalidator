@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace OValidator\Engines;
 
-use OValidator\Exceptions\ValidatorException;
+use OValidator\Exceptions\EngineException;
 use OValidator\Objects\ValidatorBase;
 
 /**
- * Creates backed enum from its value
+ * Creates backed enum from its string value. Returns instance of enum object
  */
 class VEnum extends ValidatorBase
 {
@@ -18,13 +18,13 @@ class VEnum extends ValidatorBase
     private array $disallowCases;
 
     /**
-     * @param string $enumClass Enum full class
+     * @param string $enumClass Enum class name
      * @param array<mixed> $disallowCases List of enum values which not allowed
      */
     public function __construct(string $enumClass, array $disallowCases = [])
     {
         if (!enum_exists($enumClass)) {
-            throw new \Exception($this->_('enum class name should be passed'));
+            throw new \Exception($this->_('passed enum class name not exists'));
         }
 
         $this->cases = (new \ReflectionEnum($enumClass))->getCases();
@@ -46,7 +46,7 @@ class VEnum extends ValidatorBase
             }
         }
 
-        throw new ValidatorException($this->_('case not found in: {names}', [
+        throw new EngineException($this->_('case not found in: {names}', [
             'names' => implode(', ', $this->getCasesNames()),
         ]));
     }
@@ -57,7 +57,7 @@ class VEnum extends ValidatorBase
     }
 
     /**
-     * @return string[] String names of enum
+     * @return string[] String names of enum constants
      */
     private function getCasesNames(): array
     {
