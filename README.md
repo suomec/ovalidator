@@ -2,9 +2,7 @@
 
 This package created for mapping user input to pre-defined objects with validation schema (custom rules).
 
-You can find more examples at the /examples/ dir.
-
-Usually you have user input as array and need to map/validate it to your classes. This package can help you
+Usually you have user input as array and need to map/validate it to your classes. This package can help you.
 
 First, you need a Form - class, that contains user raw data. It's /src/Form.php class.
 
@@ -58,3 +56,8 @@ input `['field' => 999]` `$result` variable will contain a list of errors (VMax 
 Setters are special objects who map validated input to your object. There are two default setters - **Direct** and 
 **Reflection**-based. First setter just apply input to object via `$object->$property` without extended checks. Second
 setter checks types of properties via reflection and supported interfaces if property is another object.
+
+### Examples
+
+You can find **more examples** at the /examples/ dir. There are a lot of different cases where that mapper and validator
+can be used. Fell free to create issue for any questions or improvements.
