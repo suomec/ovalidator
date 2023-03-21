@@ -6,7 +6,7 @@ namespace OValidator;
 
 use OValidator\Exceptions\ValidationException;
 use OValidator\Interfaces\Config as ConfigInterface;
-use OValidator\Setters\PublicProperties;
+use OValidator\Setters\ReflectionSetter;
 
 class OValidator
 {
@@ -19,7 +19,7 @@ class OValidator
     public static function validateAndSet(ConfigInterface $config, array $input, object $object): void
     {
         $form = (new Form())->fromArray($input);
-        $result = (new Mapper($form, $config))->toObject($object, new PublicProperties());
+        $result = (new Mapper($form, $config))->toObject($object, new ReflectionSetter());
 
         if ($result !== null && $result->hasErrors()) {
             throw (new ValidationException())->setErrors($result->getErrors());

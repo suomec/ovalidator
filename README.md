@@ -46,9 +46,15 @@ And the last - some code for validation and map
 
 ```php
 
-$result = (new Mapper($form, $config))->toObject($input, new PublicProperties());
+$result = (new Mapper($form, $config))->toObject($input, new ReflectionSetter());
 
 ```
 
 If you have an input: `['field' => 15]` it's correct and `$input->field` will have a value of `15`. But for
 input `['field' => 999]` `$result` variable will contain a list of errors (VMax check fails, because 999 > 20).
+
+### Setters
+
+Setters are special objects who map validated input to your object. There are two default setters - **Direct** and 
+**Reflection**-based. First setter just apply input to object via `$object->$property` without extended checks. Second
+setter checks types of properties via reflection and supported interfaces if property is another object.

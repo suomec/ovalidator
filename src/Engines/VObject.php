@@ -10,7 +10,7 @@ use OValidator\Interfaces\CanBeValidated;
 use OValidator\Interfaces\Setter;
 use OValidator\Mapper;
 use OValidator\Objects\ValidatorBase;
-use OValidator\Setters\PublicProperties;
+use OValidator\Setters\ReflectionSetter;
 
 /**
  * Make object of desired type from input array
@@ -38,7 +38,7 @@ class VObject extends ValidatorBase
         }
 
         $this->className = $className;
-        $this->setter = $setter !== null ? $setter : new PublicProperties();
+        $this->setter = $setter !== null ? $setter : new ReflectionSetter();
     }
 
     public function check(mixed $value): mixed

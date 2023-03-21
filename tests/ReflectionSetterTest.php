@@ -4,22 +4,85 @@ declare(strict_types=1);
 
 namespace OValidator\Tests;
 
-use OValidator\Setters\PublicProperties;
+use OValidator\Setters\ReflectionSetter;
 use OValidator\Tests\Samples\SObject1;
 use OValidator\Tests\Samples\SObject2;
 use OValidator\Tests\Samples\SObject3;
+use OValidator\Tests\Samples\SObject4;
 use PHPUnit\Framework\TestCase;
 
-class SetterPublicPropertiesTest extends TestCase
+class ReflectionSetterTest extends TestCase
 {
-    public function testPublicPropertiesSuccess(): void
+    public function testReflectionSetterFailsIfObjectPropertyNotPassed(): void
+    {
+        $v = new SObject2();
+
+        $setter = new ReflectionSetter();
+        $result = $setter->setProperties($v, []);
+
+        $this->assertNotNull($result);
+        $this->assertEquals(
+            'not found in validated request and not nullable',
+            $result->getErrors()['prop'][0],
+        );
+    }
+
+    public function testReflectionSetterFailsIfTypeIncorrect(): void
+    {
+        $v = new SObject2();
+
+        $setter = new ReflectionSetter();
+        $result = $setter->setProperties($v, [
+            'prop' => 'test',
+        ]);
+
+        $this->assertNotNull($result);
+        $this->assertEquals(
+            'assign types mismatch (int != string)',
+            $result->getErrors()['prop'][0],
+        );
+    }
+
+    public function testReflectionSetterFailsIfPropertyDoesntImplementInterface(): void
+    {
+        $v = new SObject4();
+
+        $setter = new ReflectionSetter();
+        $result = $setter->setProperties($v, [
+            'prop' => new SObject2(),
+        ]);
+
+        $this->assertNotNull($result);
+        $this->assertEquals(
+            "object value can't be applied",
+            $result->getErrors()['prop'][0],
+        );
+    }
+
+    public function testReflectionSetterFailsIfPropertyCantBeNull(): void
+    {
+        $v = new SObject2();
+
+        $setter = new ReflectionSetter();
+        $result = $setter->setProperties($v, [
+            'prop' => null,
+        ]);
+
+        $this->assertNotNull($result);
+        $this->assertEquals(
+            "doesn't not allow NULL values",
+            $result->getErrors()['prop'][0],
+        );
+    }
+
+    public function testReflectionSetterSuccess(): void
     {
         $v = new SObject1();
 
         $pObjProp = new SObject2();
         $pObjProp->prop = 111;
 
-        $setter = new PublicProperties();
+        $setter = new ReflectionSetter();
         $r = $setter->setProperties($v, [
             // int values
             'pIntReq' => 123,

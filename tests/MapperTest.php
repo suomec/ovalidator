@@ -11,7 +11,7 @@ use OValidator\Interfaces\Setter;
 use OValidator\Mapper;
 use OValidator\Objects\Result;
 use OValidator\Objects\State;
-use OValidator\Setters\PublicProperties;
+use OValidator\Setters\ReflectionSetter;
 use OValidator\Tests\Samples\SObject2;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +24,7 @@ class MapperTest extends TestCase
 
         $mapper = new Mapper($form, $config);
 
-        $setter = new PublicProperties();
+        $setter = new ReflectionSetter();
         $object = new SObject2();
         $object->prop = 1;
         $result = $mapper->toObject($object, $setter);
@@ -68,7 +68,7 @@ class MapperTest extends TestCase
 
         $mapper = new Mapper($form, $config);
 
-        $setter = new PublicProperties();
+        $setter = new ReflectionSetter();
         $object = new SObject2();
         $object->prop = 1;
         $result = $mapper->toObject($object, $setter);

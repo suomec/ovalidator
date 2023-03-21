@@ -9,9 +9,9 @@ use OValidator\Interfaces\ValidationResult;
 use OValidator\Objects\Result;
 
 /**
- * Setter for typed and not typed public properties of object via reflection
+ * Setter for typed and not typed public properties of object based on reflection information
  */
-class PublicProperties implements Setter
+class ReflectionSetter implements Setter
 {
     /** @var array<string, array<string, ?\ReflectionNamedType>> */
     public static array $reflectionCache = [];
