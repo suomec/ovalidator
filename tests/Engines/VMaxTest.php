@@ -56,7 +56,7 @@ class VMaxTest extends TestCase
     /**
      * @return array<mixed>
      */
-    private function providerMax(): array
+    protected function providerMax(): array
     {
         return [
             [100, 900],

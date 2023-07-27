@@ -32,7 +32,7 @@ class VFloatTest extends TestCase
     /**
      * @return array<mixed>
      */
-    private function providerFloat(): array
+    protected function providerFloat(): array
     {
         return [
             [1.1, 1.1],

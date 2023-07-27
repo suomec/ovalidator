@@ -48,7 +48,7 @@ class VArrayFromJsonTest extends TestCase
     /**
      * @return array<mixed>
      */
-    private function providerArrayFromJson(): array
+    protected function providerArrayFromJson(): array
     {
         return [
             ['[1,2,3]', [1,2,3]],

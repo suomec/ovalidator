@@ -48,7 +48,7 @@ class VIntegerTest extends TestCase
     /**
      * @return array<mixed>
      */
-    private function providerInteger(): array
+    protected function providerInteger(): array
     {
         return [
             [1, 1],

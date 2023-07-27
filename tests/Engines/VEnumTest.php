@@ -41,7 +41,7 @@ class VEnumTest extends TestCase
     /**
      * @return array<mixed>
      */
-    private function providerEnum(): array
+    protected function providerEnum(): array
     {
         return [
             ['Case1', [], VEnumObjectInt::Case1],

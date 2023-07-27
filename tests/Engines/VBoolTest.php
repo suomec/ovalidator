@@ -32,7 +32,7 @@ class VBoolTest extends TestCase
     /**
      * @return array<mixed>
      */
-    private function providerBool(): array
+    protected function providerBool(): array
     {
         return [
             ['truE', true],

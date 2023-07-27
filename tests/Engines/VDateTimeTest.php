@@ -40,7 +40,7 @@ class VDateTimeTest extends TestCase
     /**
      * @return array<mixed>
      */
-    private function providerDateTime(): array
+    protected function providerDateTime(): array
     {
         return [
             ['2000-01-01', 'Y-m-d', true, '2000-01-01'],

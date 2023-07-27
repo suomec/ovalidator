@@ -56,7 +56,7 @@ class VMinTest extends TestCase
     /**
      * @return array<mixed>
      */
-    private function providerMin(): array
+    protected function providerMin(): array
     {
         return [
             [100, 1],

@@ -51,7 +51,7 @@ class VArrayTest extends TestCase
     /**
      * @return array<mixed>
      */
-    private function providerArray(): array
+    protected function providerArray(): array
     {
         return [
             // unique

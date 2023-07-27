@@ -32,7 +32,7 @@ class VInstanceOfTest extends TestCase
     /**
      * @return array<mixed>
      */
-    private function providerInstanceOf(): array
+    protected function providerInstanceOf(): array
     {
         return [
             [(object)['a' => 'b'], 'stdClass'],

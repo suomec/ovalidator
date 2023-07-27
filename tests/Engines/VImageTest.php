@@ -156,7 +156,7 @@ class VImageTest extends TestCase
     /**
      * @return array<mixed>
      */
-    private function providerImage(): array
+    protected function providerImage(): array
     {
         $constraintOk = $this->createMock(ConstraintInterface::class);
         $constraintOk->method('check')->willReturn(true);

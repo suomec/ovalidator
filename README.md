@@ -1,4 +1,4 @@
-# PHP object mapper and schema validator
+# PHP object mapper and schema validator (PHP version >= 8.1)
 
 This package created for mapping user input to pre-defined objects with validation schema (custom rules).
 
