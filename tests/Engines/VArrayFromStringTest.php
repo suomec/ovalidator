@@ -6,6 +6,7 @@ namespace OValidator\Tests\Engines;
 
 use OValidator\Engines\VArrayFromString;
 use OValidator\Exceptions\EngineException;
+use OValidator\Objects\LocPhpFile;
 use PHPUnit\Framework\TestCase;
 
 class VArrayFromStringTest extends TestCase
@@ -16,7 +17,7 @@ class VArrayFromStringTest extends TestCase
      */
     public function testArrayFromStringEngineSuccess(mixed $input, string $separator, array $result): void
     {
-        $engine = new VArrayFromString($separator);
+        $engine = $this->get($separator);
 
         $this->assertEquals($result, $engine->check($input));
     }
@@ -26,7 +27,7 @@ class VArrayFromStringTest extends TestCase
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage("separator can't be empty");
 
-        (new VArrayFromString(''))->check('test');
+        ($this->get(''))->check('test');
     }
 
     public function testArrayFromStringEngineFailedIfInputNotString(): void
@@ -34,7 +35,7 @@ class VArrayFromStringTest extends TestCase
         $this->expectException(EngineException::class);
         $this->expectExceptionMessage('value should be string');
 
-        (new VArrayFromString())->check(['x']);
+        ($this->get())->check(['x']);
     }
 
     /**
@@ -47,5 +48,15 @@ class VArrayFromStringTest extends TestCase
             ['', '||', []],
             ['test value without separator', '||', ['test value without separator']],
         ];
+    }
+
+    private function get(string $separator = ','): VArrayFromString
+    {
+        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+
+        $v = new VArrayFromString($separator);
+        $v->setLocalization($l);
+
+        return $v;
     }
 }

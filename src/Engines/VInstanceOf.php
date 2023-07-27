@@ -22,7 +22,7 @@ class VInstanceOf extends ValidatorBase
     public function check(mixed $value): mixed
     {
         if (!($value instanceof $this->needType)) {
-            throw new EngineException($this->_('should be instance of {type}', [
+            throw new EngineException($this->_('NOT_INSTANCE', [
                 'type' => $this->needType,
             ]));
         }

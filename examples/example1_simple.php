@@ -28,7 +28,7 @@ $config = (new Config())
 ;
 
 OValidator::validateAndSet($config, [
-    'int'    => 100,
+    'int'    => '100',
     'string' => 'test',
     'float'  => 1.2,
 ], $input);

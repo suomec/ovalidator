@@ -26,12 +26,12 @@ class VMin extends ValidatorBase
             case is_float($value):
             case is_int($value):
                 $size = $value;
-                $errorMessage = $this->_('number must be greater than {min}', ['min' => $this->minSize]);
+                $errorMessage = $this->_('NUM_ERROR', ['min' => $this->minSize]);
                 break;
 
             case is_string($value):
                 $size = \mb_strlen($value);
-                $errorMessage = $this->_('string should contain at least {min} characters but contains {size}', [
+                $errorMessage = $this->_('STRING_ERROR', [
                     'min'  => $this->minSize,
                     'size' => $size,
                 ]);
@@ -39,14 +39,14 @@ class VMin extends ValidatorBase
 
             case is_array($value):
                 $size = count($value);
-                $errorMessage = $this->_('array should contain at least {min} items but contains {size}', [
+                $errorMessage = $this->_('ARRAY_ERROR', [
                     'min'  => $this->minSize,
                     'size' => $size,
                 ]);
                 break;
 
             default:
-                throw new EngineException($this->_('checks only numbers, strings and arrays, got: {type}', [
+                throw new EngineException($this->_('TYPE_ERROR', [
                     'type' => gettype($value),
                 ]));
         }

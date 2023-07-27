@@ -8,6 +8,7 @@ use OValidator\Engines\VArray;
 use OValidator\Engines\VInteger;
 use OValidator\Exceptions\EngineException;
 use OValidator\Interfaces\Validator;
+use OValidator\Objects\LocPhpFile;
 use PHPUnit\Framework\TestCase;
 
 class VArrayTest extends TestCase
@@ -18,7 +19,7 @@ class VArrayTest extends TestCase
      */
     public function testArrayEngineSuccess(mixed $input, ?array $validators, bool $onlyUnique, bool $keepOriginal, mixed $result): void
     {
-        $engine = new VArray($validators, $onlyUnique, $keepOriginal);
+        $engine = $this->get($validators, $onlyUnique, $keepOriginal);
 
         $this->assertEquals($result, $engine->check($input));
     }
@@ -28,7 +29,7 @@ class VArrayTest extends TestCase
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('should be at least one validator for array item (validators != null)');
 
-        (new VArray([]))->check([]);
+        ($this->get([]))->check([]);
     }
 
     public function testArrayEngineFailedIfValidatorsPassedButTypeIncorrect(): void
@@ -36,9 +37,7 @@ class VArrayTest extends TestCase
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('every validator should be instance of Validator interface');
 
-
-        //@phpstan-ignore-next-line
-        (new VArray([new VInteger(), new \stdClass()]))->check([1]);
+        ($this->get([new VInteger(), new \stdClass()]))->check([1]);
     }
 
     public function testArrayEngineFailedIfNotArrayPassed(): void
@@ -46,7 +45,7 @@ class VArrayTest extends TestCase
         $this->expectException(EngineException::class);
         $this->expectExceptionMessage('should be array');
 
-        (new VArray())->check('test');
+        ($this->get())->check('test');
     }
 
     /**
@@ -74,5 +73,16 @@ class VArrayTest extends TestCase
                 ['111'], [new VInteger()], false, true, [111]
             ],
         ];
+    }
+
+    //@phpstan-ignore-next-line
+    private function get(?array $validators = null, bool $onlyUnique = false, bool $keepOriginal = false): VArray
+    {
+        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+
+        $v = new VArray($validators, $onlyUnique, $keepOriginal);
+        $v->setLocalization($l);
+
+        return $v;
     }
 }

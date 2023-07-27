@@ -7,7 +7,7 @@ namespace OValidator;
 use OValidator\Exceptions\EngineException;
 use OValidator\Interfaces\Collection;
 use OValidator\Interfaces\Config as ConfigInterface;
-use OValidator\Interfaces\I18n;
+use OValidator\Interfaces\Localization;
 use OValidator\Interfaces\ValidationResult;
 use OValidator\Objects\FieldConfig;
 use OValidator\Objects\Result;
@@ -20,14 +20,12 @@ class Config implements ConfigInterface
     private array $ignoredExtraFields;
     /** @var array<string, FieldConfig> */
     private array $fields;
-    private ?I18n $i18n;
 
     public function __construct(bool $disableExtraFields = true)
     {
         $this->fields = [];
         $this->ignoredExtraFields = [];
         $this->disableExtraFields = $disableExtraFields;
-        $this->i18n = null;
     }
 
     public function add(string $fieldName, string $description, State $state, array $validators): ConfigInterface
@@ -49,7 +47,7 @@ class Config implements ConfigInterface
         $this->ignoredExtraFields = $fields;
     }
 
-    public function validate(array $values): ValidationResult
+    public function validate(array $values, Localization $localization): ValidationResult
     {
         $result = new Result();
 
@@ -75,7 +73,7 @@ class Config implements ConfigInterface
 
         $validated = [];
         foreach ($this->fields as $name => $config) {
-            $validated[$name] = $this->validateAndGet($name, $config, $values, $result);
+            $validated[$name] = $this->validateAndGet($name, $config, $values, $result, $localization);
         }
 
         $result->setValues($validated);
@@ -83,20 +81,21 @@ class Config implements ConfigInterface
         return $result;
     }
 
-    public function setI18n(I18n $i18n): void
-    {
-        $this->i18n = $i18n;
-    }
-
     /**
      * @param string $name Field name
      * @param FieldConfig $config Field config
      * @param array<string, mixed> $values Input values
      * @param ValidationResult $result Validation result container
+     * @param Localization $localization Localization config
      * @return mixed New value
      */
-    private function validateAndGet(string $name, FieldConfig $config, array $values, ValidationResult $result): mixed
-    {
+    private function validateAndGet(
+        string $name,
+        FieldConfig $config,
+        array $values,
+        ValidationResult $result,
+        Localization $localization,
+    ): mixed {
         if (!array_key_exists($name, $values) || $values[$name] === null) {
             switch ($config->getState()) {
                 case State::Required:
@@ -110,9 +109,7 @@ class Config implements ConfigInterface
 
         $newValue = $values[$name];
         foreach ($config->getValidators() as $validator) {
-            if ($this->i18n !== null) {
-                $validator->setI18n($this->i18n);
-            }
+            $validator->setLocalization($localization);
 
             try {
                 $newValue = $validator->check($newValue);

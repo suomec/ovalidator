@@ -7,6 +7,7 @@ namespace OValidator\Tests;
 use OValidator\Config;
 use OValidator\Engines\VInteger;
 use OValidator\Form;
+use OValidator\Interfaces\Localization;
 use OValidator\Interfaces\Setter;
 use OValidator\Mapper;
 use OValidator\Objects\Result;
@@ -22,7 +23,10 @@ class MapperTest extends TestCase
         $form = (new Form())->fromArray(['prop' => 'test']);
         $config = (new Config())->add('prop', '', State::Required, [new VInteger()]);
 
-        $mapper = new Mapper($form, $config);
+        $l = $this->createMock(Localization::class);
+        $l->method('_')->willReturn('TEST');
+
+        $mapper = new Mapper($form, $config, $l);
 
         $setter = new ReflectionSetter();
         $object = new SObject2();
@@ -34,7 +38,7 @@ class MapperTest extends TestCase
         }
 
         $this->assertTrue($result->hasErrors());
-        $this->assertEquals(['prop' => ['not numeric']], $result->getErrors());
+        $this->assertEquals(['prop' => ['TEST']], $result->getErrors());
     }
 
     public function testMapperFailsIfSetterFailed(): void
@@ -42,7 +46,9 @@ class MapperTest extends TestCase
         $form = (new Form())->fromArray(['prop' => 222]);
         $config = (new Config())->add('prop', '', State::Required, [new VInteger()]);
 
-        $mapper = new Mapper($form, $config);
+        $l = $this->createMock(Localization::class);
+
+        $mapper = new Mapper($form, $config, $l);
 
         $badResult = new Result();
         $badResult->addError('prop', 'test');
@@ -66,7 +72,9 @@ class MapperTest extends TestCase
         $form = (new Form())->fromArray(['prop' => 2]);
         $config = (new Config())->add('prop', '', State::Required, [new VInteger()]);
 
-        $mapper = new Mapper($form, $config);
+        $l = $this->createMock(Localization::class);
+
+        $mapper = new Mapper($form, $config, $l);
 
         $setter = new ReflectionSetter();
         $object = new SObject2();

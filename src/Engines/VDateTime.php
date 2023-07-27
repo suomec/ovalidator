@@ -8,7 +8,7 @@ use OValidator\Exceptions\EngineException;
 use OValidator\Objects\ValidatorBase;
 
 /**
- * Field should be date and time in specific format. Returns DateTimeImmutable object
+ * Field should be date and time in specific format. Returns DateTimeImmutable object or formatted string
  */
 class VDateTime extends ValidatorBase
 {
@@ -36,14 +36,14 @@ class VDateTime extends ValidatorBase
         if (is_string($value)) {
             $instance = \DateTimeImmutable::createFromFormat($this->format, trim($value));
             if (is_bool($instance)) {
-                throw new EngineException($this->_("can't parse date for format: {format}", [
+                throw new EngineException($this->_('CANT_PARSE', [
                     'format' => $this->format,
                 ]));
             }
         }
 
         if ($instance === null) {
-            throw new EngineException($this->_('should be string or DateTimeImmutable'));
+            throw new EngineException($this->_('BAD_TYPE'));
         }
 
         if ($this->forceAsString) {

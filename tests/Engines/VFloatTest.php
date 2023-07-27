@@ -6,6 +6,7 @@ namespace OValidator\Tests\Engines;
 
 use OValidator\Engines\VFloat;
 use OValidator\Exceptions\EngineException;
+use OValidator\Objects\LocPhpFile;
 use PHPUnit\Framework\TestCase;
 
 class VFloatTest extends TestCase
@@ -25,7 +26,7 @@ class VFloatTest extends TestCase
         $this->expectException(EngineException::class);
         $this->expectExceptionMessage('is not float');
 
-        (new VFloat())->check([100]);
+        ($this->get())->check([100]);
     }
 
     /**
@@ -35,6 +36,18 @@ class VFloatTest extends TestCase
     {
         return [
             [1.1, 1.1],
+            ['200.1', 200.1],
+            [-1.1, -1.1],
         ];
+    }
+
+    private function get(): VFloat
+    {
+        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+
+        $v = new VFloat();
+        $v->setLocalization($l);
+
+        return $v;
     }
 }

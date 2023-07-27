@@ -6,6 +6,7 @@ namespace OValidator\Tests\Engines;
 
 use OValidator\Engines\VInteger;
 use OValidator\Exceptions\EngineException;
+use OValidator\Objects\LocPhpFile;
 use PHPUnit\Framework\TestCase;
 
 class VIntegerTest extends TestCase
@@ -23,25 +24,25 @@ class VIntegerTest extends TestCase
     public function testIntegerEngineFailedIfNotNumeric(): void
     {
         $this->expectException(EngineException::class);
-        $this->expectExceptionMessage('not numeric');
+        $this->expectExceptionMessage('should be numeric string');
 
-        (new VInteger())->check([1, 2, 3]);
+        ($this->get())->check([1, 2, 3]);
     }
 
     public function testIntegerEngineFailedIfFloat(): void
     {
         $this->expectException(EngineException::class);
-        $this->expectExceptionMessage('is float');
+        $this->expectExceptionMessage('floats not allowed');
 
-        (new VInteger())->check(1.1);
+        ($this->get())->check(1.1);
     }
 
     public function testIntegerEngineFailedIfFloatWithoutMantissa(): void
     {
         $this->expectException(EngineException::class);
-        $this->expectExceptionMessage('may be float');
+        $this->expectExceptionMessage('seems to be float');
 
-        (new VInteger())->check('1.1');
+        ($this->get())->check('1.1');
     }
 
     /**
@@ -55,5 +56,15 @@ class VIntegerTest extends TestCase
             ['123', 123],
             ['+89', 89],
         ];
+    }
+
+    private function get(): VInteger
+    {
+        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+
+        $v = new VInteger();
+        $v->setLocalization($l);
+
+        return $v;
     }
 }

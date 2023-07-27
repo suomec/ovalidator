@@ -24,7 +24,7 @@ class VEnum extends ValidatorBase
     public function __construct(string $enumClass, array $disallowCases = [])
     {
         if (!enum_exists($enumClass)) {
-            throw new \Exception($this->_('passed enum class name not exists'));
+            throw new \Exception('passed enum class name not exists');
         }
 
         $this->cases = (new \ReflectionEnum($enumClass))->getCases();
@@ -46,7 +46,7 @@ class VEnum extends ValidatorBase
             }
         }
 
-        throw new EngineException($this->_('case not found in: {names}', [
+        throw new EngineException($this->_('CASE_NOT_FOUND', [
             'names' => implode(', ', $this->getCasesNames()),
         ]));
     }

@@ -6,6 +6,7 @@ namespace OValidator\Tests\Engines;
 
 use OValidator\Engines\VBool;
 use OValidator\Exceptions\EngineException;
+use OValidator\Objects\LocPhpFile;
 use PHPUnit\Framework\TestCase;
 
 class VBoolTest extends TestCase
@@ -15,7 +16,7 @@ class VBoolTest extends TestCase
      */
     public function testBoolEngineSuccess(mixed $input, bool $result): void
     {
-        $engine = new VBool();
+        $engine = $this->get();
 
         $this->assertEquals($result, $engine->check($input));
     }
@@ -23,9 +24,9 @@ class VBoolTest extends TestCase
     public function testBoolEngineFailed(): void
     {
         $this->expectException(EngineException::class);
-        $this->expectExceptionMessage('should have boolean format');
+        $this->expectExceptionMessage('boolean format not parsed');
 
-        (new VBool())->check('test string');
+        ($this->get())->check('test string');
     }
 
     /**
@@ -48,5 +49,15 @@ class VBoolTest extends TestCase
             ['no', false],
             ['OFF', false],
         ];
+    }
+
+    private function get(): VBool
+    {
+        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+
+        $v = new VBool();
+        $v->setLocalization($l);
+
+        return $v;
     }
 }

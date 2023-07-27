@@ -26,7 +26,7 @@ class VArrayFromString extends ValidatorBase
     public function check(mixed $value): mixed
     {
         if (!is_string($value)) {
-            throw new EngineException($this->_('value should be string'));
+            throw new EngineException($this->_('NOT_STRING'));
         }
 
         if ($value === '') {
@@ -43,6 +43,6 @@ class VArrayFromString extends ValidatorBase
 
     public function getDescription(): string
     {
-        return "array from string, separated by `{$this->separator}`";
+        return "array from items from string, separated by `{$this->separator}`";
     }
 }

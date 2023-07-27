@@ -15,11 +15,11 @@ class VInteger extends ValidatorBase
     public function check(mixed $value): mixed
     {
         if (!is_numeric($value)) {
-            throw new EngineException($this->_('not numeric'));
+            throw new EngineException($this->_('NOT_NUMERIC'));
         }
 
         if (is_float($value)) {
-            throw new EngineException($this->_('is float'));
+            throw new EngineException($this->_('CANT_BE_FLOAT'));
         }
 
         // "+" before number, ('+17' -> '17')
@@ -33,7 +33,7 @@ class VInteger extends ValidatorBase
 
         // float without .XXX part
         if ((string)(int)$value !== (string)$value) {
-            throw new EngineException($this->_('may be float'));
+            throw new EngineException($this->_('LOOKS_LIKE_FLOAT'));
         }
 
         return (int)$value;

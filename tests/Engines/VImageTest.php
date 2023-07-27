@@ -8,6 +8,7 @@ use OValidator\Engines\VImage;
 use OValidator\Engines\VImage\ConstraintInterface;
 use OValidator\Engines\VImage\Descriptor;
 use OValidator\Exceptions\EngineException;
+use OValidator\Objects\LocPhpFile;
 use PHPUnit\Framework\TestCase;
 
 class VImageTest extends TestCase
@@ -28,16 +29,15 @@ class VImageTest extends TestCase
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('every VImage constraint should implement ConstraintInterface');
 
-        //@phpstan-ignore-next-line
-        new VImage([new \stdClass()]);
+        $this->get([new \stdClass()]);
     }
 
-    public function testImageEngineFailedIfAllowedImagesTypesListIsEMpty(): void
+    public function testImageEngineFailedIfAllowedImagesTypesListIsEmpty(): void
     {
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('you should pass at least one allowed image type');
 
-        new VImage(null, []);
+        $this->get(null, []);
     }
 
     public function testImageEngineFailedIfInputNotString(): void
@@ -45,7 +45,7 @@ class VImageTest extends TestCase
         $this->expectException(EngineException::class);
         $this->expectExceptionMessage('value not string');
 
-        (new VImage())->check(123);
+        ($this->get(null, [IMAGETYPE_GIF]))->check(123);
     }
 
     public function testImageEngineFailedIfInputNotBase64Encoded(): void
@@ -53,7 +53,7 @@ class VImageTest extends TestCase
         $this->expectException(EngineException::class);
         $this->expectExceptionMessage("can't decode image contents from base64");
 
-        (new VImage())->check('!@#$%^&*(');
+        ($this->get(null, [IMAGETYPE_GIF]))->check('!@#$%^&*(');
     }
 
     public function testImageEngineFailedIfInputNotImage(): void
@@ -61,7 +61,7 @@ class VImageTest extends TestCase
         $this->expectException(EngineException::class);
         $this->expectExceptionMessage('data is not an image');
 
-        (new VImage())->check('aaa');
+        ($this->get(null, [IMAGETYPE_GIF]))->check('aaa');
     }
 
     public function testImageEngineFailedIfConstraintFailedWithMessageWithReplacement(): void
@@ -75,7 +75,7 @@ class VImageTest extends TestCase
         $constraintFail->method('getLastErrorMessage')->willReturn('message {replacement1}');
         $constraintFail->method('getLastErrorReplaces')->willReturn(['replacement1' => 'R1']);
 
-        (new VImage([$constraintFail]))->check($this->getImage(0));
+        ($this->get([$constraintFail], [IMAGETYPE_GIF]))->check($this->getImage(0));
     }
 
     public function testImageEngineFailedIfConstraintFailedWithoutMessage(): void
@@ -88,7 +88,7 @@ class VImageTest extends TestCase
         $constraintFail->method('getVisibleName')->willReturn('NAME');
         $constraintFail->method('getLastErrorMessage')->willReturn(null);
 
-        (new VImage([$constraintFail]))->check($this->getImage(0));
+        ($this->get([$constraintFail], [IMAGETYPE_GIF]))->check($this->getImage(0));
     }
 
     public function testImageEngineFailedIfTypeDisallowed(): void
@@ -99,7 +99,7 @@ class VImageTest extends TestCase
         $constraintOk = $this->createMock(ConstraintInterface::class);
         $constraintOk->method('check')->willReturn(true);
 
-        (new VImage([$constraintOk], [IMAGETYPE_GIF]))->check($this->getImage(0));
+        ($this->get([$constraintOk], [IMAGETYPE_GIF]))->check($this->getImage(0));
     }
 
     public function testImageConstraintDisableAnimatedGifSuccessForNonGif(): void
@@ -202,5 +202,16 @@ class VImageTest extends TestCase
         }
 
         return $d;
+    }
+
+    //@phpstan-ignore-next-line
+    private function get(array $constraints = null, array $types = []): VImage
+    {
+        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+
+        $v = new VImage($constraints, $types);
+        $v->setLocalization($l);
+
+        return $v;
     }
 }

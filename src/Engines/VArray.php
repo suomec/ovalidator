@@ -26,13 +26,13 @@ class VArray extends ValidatorBase
     public function __construct(?array $cellValidators = null, bool $onlyUnique = false, bool $keepOriginalKeys = false)
     {
         if ($cellValidators !== null && count($cellValidators) === 0) {
-            throw new \Exception($this->_('should be at least one validator for array item (validators != null)'));
+            throw new \Exception('should be at least one validator for array item (validators != null)');
         }
 
         if (is_array($cellValidators)) {
             foreach ($cellValidators as $validator) {
                 if (!($validator instanceof Validator)) {
-                    throw new \Exception($this->_('every validator should be instance of Validator interface'));
+                    throw new \Exception('every validator should be instance of Validator interface');
                 }
             }
         }
@@ -45,7 +45,7 @@ class VArray extends ValidatorBase
     public function check(mixed $value): mixed
     {
         if (!is_array($value)) {
-            throw new EngineException($this->_('should be array'));
+            throw new EngineException($this->_('NOT_ARRAY'));
         }
 
         if (!$this->keepOriginalKeys) {

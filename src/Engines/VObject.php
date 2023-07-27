@@ -26,15 +26,17 @@ class VObject extends ValidatorBase
      */
     public function __construct(string $className, ?Setter $setter = null)
     {
-        $implements = class_implements($className);
-        if (!is_array($implements)) {
-            throw new \Exception($this->_("can't load {class} interfaces", ['class' => $className]));
+        if (!class_exists($className)) {
+            throw new \Exception("class `{$className}` doesn't exists");
         }
 
-        if (!in_array(CanBeValidated::class, $implements)) {
-            throw new \Exception($this->_('{class} should implement CanBeValidated interface', [
-                'class' => $className,
-            ]));
+        $implements = class_implements($className);
+        if (!is_array($implements)) {
+            throw new \Exception("can't load `{$className}` interfaces");
+        }
+
+        if (!in_array(CanBeValidated::class, $implements, true)) {
+            throw new \Exception("`{$className}` should implement CanBeValidated interface");
         }
 
         $this->className = $className;
@@ -43,18 +45,22 @@ class VObject extends ValidatorBase
 
     public function check(mixed $value): mixed
     {
+        if ($this->localization === null) {
+            throw new \Exception('localization settings should be set');
+        }
+
         if (is_object($value)) {
             $value = array($value);
         }
 
         if (!is_array($value)) {
-            throw new EngineException($this->_('value should be array'));
+            throw new EngineException($this->_('SHOULD_BE_ARRAY'));
         }
 
         /** @var CanBeValidated $tmp */
         $tmp = new $this->className();
 
-        $mapper = new Mapper((new Form())->fromArray($value), $tmp->getValidationConfig(), $this->i18n);
+        $mapper = new Mapper((new Form())->fromArray($value), $tmp->getValidationConfig(), $this->localization);
         $result = $mapper->toObject($tmp, $this->setter);
         if ($result === null || !$result->hasErrors()) {
             return $tmp;
@@ -67,13 +73,13 @@ class VObject extends ValidatorBase
             $viewErrors[$k] = sprintf('%s: %s', $k, $kErrors);
         }
 
-        throw new EngineException($this->_('object validation error[{error}]', [
+        throw new EngineException($this->_('VALIDATION_ERROR', [
             'error' => implode(', ', $viewErrors),
         ]));
     }
 
     public function getDescription(): string
     {
-        return 'object from array';
+        return 'object of specified class from array';
     }
 }

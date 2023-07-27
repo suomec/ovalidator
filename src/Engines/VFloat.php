@@ -14,8 +14,12 @@ class VFloat extends ValidatorBase
 {
     public function check(mixed $value): mixed
     {
+        if (is_string($value) && preg_match('|^[\d.]+$|', $value) && substr_count($value, '.') === 1) {
+            $value = (float)$value;
+        }
+
         if (!is_float($value)) {
-            throw new EngineException($this->_('is not float'));
+            throw new EngineException($this->_('NOT_FLOAT'));
         }
 
         return $value;

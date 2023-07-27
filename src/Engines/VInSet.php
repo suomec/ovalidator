@@ -24,7 +24,7 @@ class VInSet extends ValidatorBase
     public function __construct(array $allowedValues, bool $returnIndex = false)
     {
         if (count($allowedValues) === 0) {
-            throw new \Exception($this->_("allowedValues list can't be empty"));
+            throw new \Exception("allowedValues list can't be empty");
         }
 
         $this->allowedValues = $allowedValues;
@@ -34,11 +34,11 @@ class VInSet extends ValidatorBase
     public function check(mixed $value): mixed
     {
         if (!is_string($value) && !is_int($value) && !is_float($value)) {
-            throw new EngineException($this->_('value type should be: string, int, float'));
+            throw new EngineException($this->_('TYPE_NOT_ALLOWED'));
         }
 
         if (!in_array($value, $this->allowedValues, true)) {
-            throw new EngineException($this->_('value is not allowed (not in set)'));
+            throw new EngineException($this->_('VALUE_NOT_ALLOWED'));
         }
 
         if (!$this->returnIndex) {
@@ -51,7 +51,7 @@ class VInSet extends ValidatorBase
             }
         }
 
-        throw new EngineException($this->_('value by index not found'));
+        throw new EngineException($this->_('VALUE_BY_INDEX_NOT_FOUND'));
     }
 
     public function getDescription(): string

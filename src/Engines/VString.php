@@ -16,7 +16,7 @@ class VString extends ValidatorBase
     private bool $doTrim;
 
     /**
-     * @param bool $doTrim Apply trim function to string
+     * @param bool $doTrim Apply trim() function to result string
      */
     public function __construct(bool $doTrim = false)
     {
@@ -25,8 +25,16 @@ class VString extends ValidatorBase
 
     public function check(mixed $value): mixed
     {
+        if ($value instanceof \Stringable) {
+            $value = $value->__toString();
+        }
+
+        if (is_int($value)) {
+            $value = (string)$value;
+        }
+
         if (!is_string($value)) {
-            throw new EngineException($this->_('should be string'));
+            throw new EngineException($this->_('SHOULD_BE_STRING'));
         }
 
         if ($this->doTrim) {

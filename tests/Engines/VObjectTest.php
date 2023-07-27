@@ -6,6 +6,7 @@ namespace OValidator\Tests\Engines;
 
 use OValidator\Engines\VObject;
 use OValidator\Exceptions\EngineException;
+use OValidator\Objects\LocPhpFile;
 use PHPUnit\Framework\TestCase;
 
 class VObjectTest extends TestCase
@@ -16,7 +17,7 @@ class VObjectTest extends TestCase
      */
     public function testObjectEngineSuccess(string $class, mixed $input, array $fields): void
     {
-        $engine = new VObject($class);
+        $engine = $this->get($class);
 
         $result = $engine->check($input);
 
@@ -25,12 +26,20 @@ class VObjectTest extends TestCase
         }
     }
 
+    public function testObjectEngineFailedIfClassNotExists(): void
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("class `TEST_TEST_TEST` doesn't exists");
+
+        $this->get('TEST_TEST_TEST');
+    }
+
     public function testObjectEngineFailedIfClassDoesntImplementInterface(): void
     {
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('OValidator\Tests\Engines\VObjectTest should implement CanBeValidated interface');
+        $this->expectExceptionMessage('`OValidator\Tests\Engines\VObjectTest` should implement CanBeValidated interface');
 
-        new VObject(VObjectTest::class);
+        $this->get(VObjectTest::class);
     }
 
     public function testObjectEngineFailedIfInputNotArray(): void
@@ -38,7 +47,7 @@ class VObjectTest extends TestCase
         $this->expectException(EngineException::class);
         $this->expectExceptionMessage('value should be array');
 
-        (new VObject(VObjectClassOk::class))->check('test');
+        ($this->get(VObjectClassOk::class))->check('test');
     }
 
     public function testObjectEngineFailedIfValidationFailed(): void
@@ -46,7 +55,7 @@ class VObjectTest extends TestCase
         $this->expectException(EngineException::class);
         $this->expectExceptionMessage('object validation error[a: field is required but not passed]');
 
-        (new VObject(VObjectClassOk::class))->check(['x' => 100]);
+        ($this->get(VObjectClassOk::class))->check(['x' => 100]);
     }
 
     /**
@@ -57,5 +66,15 @@ class VObjectTest extends TestCase
         return [
             [VObjectClassOk::class, ['a' => 1], ['a' => true]],
         ];
+    }
+
+    private function get(string $class): VObject
+    {
+        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+
+        $v = new VObject($class);
+        $v->setLocalization($l);
+
+        return $v;
     }
 }

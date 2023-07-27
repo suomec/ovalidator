@@ -18,19 +18,19 @@ class VBool extends ValidatorBase
             $value = strtolower($value);
         }
 
-        if (in_array($value, [0, '0', false, 'false', 'off', 'no'], true)) {
-            $value = false;
-        } elseif (in_array($value, [1, '1', true, 'true', 'on', 'yes'], true)) {
-            $value = true;
-        } else {
-            throw new EngineException($this->_('should have boolean format'));
+        if (in_array($value, [1, '1', true, 'true', 'on', 'yes'], true)) {
+            return true;
         }
 
-        return $value;
+        if (in_array($value, [0, '0', false, 'false', 'off', 'no'], true)) {
+            return false;
+        }
+
+        throw new EngineException($this->_('BAD_FORMAT'));
     }
 
     public function getDescription(): string
     {
-        return 'Must be 1 or 0 / true or false / "true" or "false" (as strings)';
+        return 'Must be 1 or 0 / true or false / "true" or "false" / "on" or "off" / "yes" or "no"';
     }
 }

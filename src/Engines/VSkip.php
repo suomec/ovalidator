@@ -18,6 +18,6 @@ class VSkip extends ValidatorBase
 
     public function getDescription(): string
     {
-        return 'skip checks';
+        return 'skip any check';
     }
 }

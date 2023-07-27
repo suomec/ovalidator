@@ -6,20 +6,32 @@ namespace OValidator;
 
 use OValidator\Exceptions\ValidationException;
 use OValidator\Interfaces\Config as ConfigInterface;
+use OValidator\Objects\LocPhpFile;
 use OValidator\Setters\ReflectionSetter;
 
+/**
+ * Quick validator call with default parameters
+ * If you need custom settings/mappers - create own method like validateAndSet
+ */
 class OValidator
 {
     /**
-     * Quick validator call with default parameters
      * Throws ValidationException at any error
+     * @param ConfigInterface $config Fields check config
      * @param array<string, mixed> $input User data
      * @param object $object Object to map
+     * @param string $localizationName
      */
-    public static function validateAndSet(ConfigInterface $config, array $input, object $object): void
-    {
+    public static function validateAndSet(
+        ConfigInterface $config,
+        array $input,
+        object $object,
+        string $localizationName = 'en',
+    ): void {
+        $localization = new LocPhpFile(__DIR__ . "/../etc/{$localizationName}.php");
+
         $form = (new Form())->fromArray($input);
-        $result = (new Mapper($form, $config))->toObject($object, new ReflectionSetter());
+        $result = (new Mapper($form, $config, $localization))->toObject($object, new ReflectionSetter());
 
         if ($result !== null && $result->hasErrors()) {
             throw (new ValidationException())->setErrors($result->getErrors());

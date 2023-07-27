@@ -38,7 +38,7 @@ class VImage extends ValidatorBase
         if ($constraints !== null && count($constraints) > 0) {
             foreach ($constraints as $constraint) {
                 if (!($constraint instanceof ConstraintInterface)) {
-                    throw new \Exception($this->_('every VImage constraint should implement ConstraintInterface'));
+                    throw new \Exception('every VImage constraint should implement ConstraintInterface');
                 }
             }
 
@@ -55,17 +55,17 @@ class VImage extends ValidatorBase
     public function check(mixed $value): mixed
     {
         if (!is_string($value)) {
-            throw new EngineException($this->_('value not string'));
+            throw new EngineException($this->_('NOT_STRING'));
         }
 
         $content = preg_replace('|(data:image/[a-z]+;base64,)(.+)|i', '${2}', $value);
         if (!is_string($content)) {
-            throw new EngineException($this->_('error stripping image prefix'));
+            throw new EngineException($this->_('BAD_PREFIX'));
         }
 
         $content = base64_decode($content);
         if (!is_string($content) || $content === '') {
-            throw new EngineException($this->_("can't decode image contents from base64"));
+            throw new EngineException($this->_('BAD_BASE64'));
         }
 
         try {
@@ -75,12 +75,12 @@ class VImage extends ValidatorBase
         }
 
         if (!$image) {
-            throw new EngineException($this->_('data is not an image'));
+            throw new EngineException($this->_('NOT_IMAGE'));
         }
 
         $imageSizes = getimagesizefromstring($content);
         if ($imageSizes === false) {
-            throw new EngineException($this->_("can't get image sizes"));
+            throw new EngineException($this->_('BAD_SIZES'));
         }
 
         foreach ($this->constraints as $constraint) {
@@ -88,12 +88,18 @@ class VImage extends ValidatorBase
             if ($result === false) {
                 $message = $constraint->getLastErrorMessage();
                 if ($message !== null) {
-                    $error = $this->_($message, $constraint->getLastErrorReplaces());
+                    $error = $message;
+                    foreach ($constraint->getLastErrorReplaces() as $k => $v) {
+                        if (is_int($v)) {
+                            $v = (string)$v;
+                        }
+                        $error = str_replace(sprintf('{%s}', $k), $v, $error);
+                    }
                 } else {
                     $error = 'no error';
                 }
 
-                throw new EngineException($this->_("image constraint '{name}' error: {message}", [
+                throw new EngineException($this->_('CONSTRAINT_ERROR', [
                     'name'    => $constraint->getVisibleName(),
                     'message' => $error,
                 ]));
@@ -106,7 +112,7 @@ class VImage extends ValidatorBase
                 $allowed[] = image_type_to_mime_type($type);
             }
 
-            throw new EngineException($this->_('image type is not allowed (only {types} supported)', [
+            throw new EngineException($this->_('TYPE_NOT_ALLOWED', [
                 'types' => implode(', ', $allowed),
             ]));
         }

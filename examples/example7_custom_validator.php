@@ -4,6 +4,8 @@ require_once __DIR__ . '/../var/vendor/autoload.php';
 
 use OValidator\Config;
 use OValidator\Exceptions\ValidationException;
+use OValidator\Interfaces\Localization;
+use OValidator\Interfaces\Validator;
 use OValidator\Objects\State;
 use OValidator\OValidator;
 
@@ -18,7 +20,7 @@ class Input
 
 $input = new Input();
 
-class OddValidator implements \OValidator\Interfaces\Validator
+class OddValidator implements Validator
 {
     public function check(mixed $value): mixed
     {
@@ -33,7 +35,7 @@ class OddValidator implements \OValidator\Interfaces\Validator
         throw new ValidationException('not odd');
     }
 
-    public function setI18n(\OValidator\Interfaces\I18n $i18n): void
+    public function setLocalization(Localization $localization): void
     {
     }
 

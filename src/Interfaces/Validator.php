@@ -22,9 +22,9 @@ interface Validator
     public function getDescription(): string;
 
     /**
-     * Set localization object
-     * @param I18n $i18n Instance
+     * Set localization object before check()
+     * @param Localization $localization Instance
      * @return void
      */
-    public function setI18n(I18n $i18n): void;
+    public function setLocalization(Localization $localization): void;
 }

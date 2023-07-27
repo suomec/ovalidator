@@ -7,7 +7,7 @@ namespace OValidator\Engines;
 use OValidator\Objects\ValidatorBase;
 
 /**
- * User defined function applied to input. Returns function result without change
+ * User-defined function applied to input. Returns result of function call on input value
  */
 class VCallback extends ValidatorBase
 {
@@ -28,6 +28,6 @@ class VCallback extends ValidatorBase
 
     public function getDescription(): string
     {
-        return 'user defined callback';
+        return 'user-defined callback';
     }
 }

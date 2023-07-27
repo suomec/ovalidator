@@ -4,44 +4,31 @@ declare(strict_types=1);
 
 namespace OValidator\Objects;
 
-use OValidator\Interfaces\I18n;
+use OValidator\Interfaces\Localization;
 use OValidator\Interfaces\Validator;
 
 abstract class ValidatorBase implements Validator
 {
-    protected ?I18n $i18n = null;
+    protected ?Localization $localization = null;
 
-    public function setI18n(I18n $i18n): void
+    public function setLocalization(Localization $localization): void
     {
-        $this->i18n = $i18n;
+        $this->localization = $localization;
     }
 
     /**
-     * Default localization
-     * @param string $message Message with templates
-     * @param array<string, string|int> $replaces Template values
-     * @return string Replaced message
+     * @param string $code Error message key
+     * @param array<string, string|int> $replaces Replaces for localization
+     * @return string Localized message
      */
-    protected function _(string $message, array $replaces = []): string
+    protected function _(string $code, array $replaces = []): string
     {
-        if ($this->i18n !== null) {
-            return $this->i18n->_($message, $replaces);
+        if ($this->localization === null) {
+            return $code;
         }
 
-        $string = $message;
-        foreach ($replaces as $k => $v) {
-            $r = sprintf('{%s}', $k);
-            if (!str_contains($string, $r)) {
-                throw new \Exception("Key {$r} not found for replacement");
-            }
+        $class = basename(str_replace('\\', '/', get_class($this)));
 
-            if (is_int($v)) {
-                $v = "{$v}";
-            }
-
-            $string = str_replace($r, $v, $string);
-        }
-
-        return $string;
+        return $this->localization->_($class, $code, $replaces);
     }
 }

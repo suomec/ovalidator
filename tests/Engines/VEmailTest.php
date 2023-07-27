@@ -6,6 +6,7 @@ namespace OValidator\Tests\Engines;
 
 use OValidator\Engines\VEmail;
 use OValidator\Exceptions\EngineException;
+use OValidator\Objects\LocPhpFile;
 use PHPUnit\Framework\TestCase;
 
 class VEmailTest extends TestCase
@@ -25,7 +26,7 @@ class VEmailTest extends TestCase
         $this->expectException(EngineException::class);
         $this->expectExceptionMessage('should be string');
 
-        (new VEmail())->check(123);
+        ($this->get())->check(123);
     }
 
     public function testEmailEngineFailedOnIncorrectEmail(): void
@@ -33,7 +34,7 @@ class VEmailTest extends TestCase
         $this->expectException(EngineException::class);
         $this->expectExceptionMessage('not an email');
 
-        (new VEmail())->check('12312312___');
+        ($this->get())->check('12312312___');
     }
 
     /**
@@ -44,5 +45,15 @@ class VEmailTest extends TestCase
         return [
             [' a@a.com ', 'a@a.com'],
         ];
+    }
+
+    private function get(): VEmail
+    {
+        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+
+        $v = new VEmail();
+        $v->setLocalization($l);
+
+        return $v;
     }
 }

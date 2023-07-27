@@ -6,6 +6,7 @@ namespace OValidator\Tests\Engines;
 
 use OValidator\Engines\VInSet;
 use OValidator\Exceptions\EngineException;
+use OValidator\Objects\LocPhpFile;
 use PHPUnit\Framework\TestCase;
 
 class VInSetTest extends TestCase
@@ -21,12 +22,20 @@ class VInSetTest extends TestCase
         $this->assertEquals($result, $engine->check($input));
     }
 
+    public function testInSetEngineFailedIfAllowedListIsEmpty(): void
+    {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("allowedValues list can't be empty");
+
+        $this->get([]);
+    }
+
     public function testInSetEngineFailedIfInputTypeIncorrect(): void
     {
         $this->expectException(EngineException::class);
         $this->expectExceptionMessage('value type should be: string, int, float');
 
-        (new VInSet(['aaa']))->check(new \stdClass());
+        ($this->get(['aaa']))->check(new \stdClass());
     }
 
     public function testInSetEngineFailedIfInputValueNotAllowed(): void
@@ -34,7 +43,7 @@ class VInSetTest extends TestCase
         $this->expectException(EngineException::class);
         $this->expectExceptionMessage('value is not allowed (not in set)');
 
-        (new VInSet(['aaa']))->check('bbb');
+        ($this->get(['aaa']))->check('bbb');
     }
 
     /**
@@ -48,5 +57,16 @@ class VInSetTest extends TestCase
             [1.1, [3.1, 2.1, 1.1], false, 1.1],
             ['a', ['aa' => 'a', 'bb' => 'b', 'cc' => 'c'], true, 'aa'],
         ];
+    }
+
+    //@phpstan-ignore-next-line
+    private function get(array $set): VInSet
+    {
+        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+
+        $v = new VInSet($set);
+        $v->setLocalization($l);
+
+        return $v;
     }
 }

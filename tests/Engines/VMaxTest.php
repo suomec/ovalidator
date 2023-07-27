@@ -6,6 +6,7 @@ namespace OValidator\Tests\Engines;
 
 use OValidator\Engines\VMax;
 use OValidator\Exceptions\EngineException;
+use OValidator\Objects\LocPhpFile;
 use PHPUnit\Framework\TestCase;
 
 class VMaxTest extends TestCase
@@ -15,7 +16,7 @@ class VMaxTest extends TestCase
      */
     public function testMaxEngineSuccess(mixed $input, int $maxValue): void
     {
-        $engine = new VMax($maxValue);
+        $engine = $this->get($maxValue);
 
         $this->assertEquals($input, $engine->check($input));
     }
@@ -25,7 +26,7 @@ class VMaxTest extends TestCase
         $this->expectException(EngineException::class);
         $this->expectExceptionMessage('number must be less than 200');
 
-        (new VMax(200))->check(300);
+        ($this->get(200))->check(300);
     }
 
     public function testMaxEngineFailedIfFloatToSmall(): void
@@ -33,7 +34,7 @@ class VMaxTest extends TestCase
         $this->expectException(EngineException::class);
         $this->expectExceptionMessage('number must be less than 300');
 
-        (new VMax(300))->check(400.0);
+        ($this->get(300))->check(400.0);
     }
 
     public function testMaxEngineFailedIfStringTooShort(): void
@@ -41,7 +42,7 @@ class VMaxTest extends TestCase
         $this->expectException(EngineException::class);
         $this->expectExceptionMessage('string should contain at most 2 characters but contains 4');
 
-        (new VMax(2))->check('test');
+        ($this->get(2))->check('test');
     }
 
     public function testMaxEngineFailedIfArrayToSmall(): void
@@ -49,7 +50,7 @@ class VMaxTest extends TestCase
         $this->expectException(EngineException::class);
         $this->expectExceptionMessage('array should contain at most 2 items but contains 4');
 
-        (new VMax(2))->check([1, 2, 3, 4]);
+        ($this->get(2))->check([1, 2, 3, 4]);
     }
 
     /**
@@ -65,5 +66,15 @@ class VMaxTest extends TestCase
             ['首映鼓掌10分鐘 評語指不及', 900],
             [[3,2,1], 900],
         ];
+    }
+
+    private function get(int $max): VMax
+    {
+        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+
+        $v = new VMax($max);
+        $v->setLocalization($l);
+
+        return $v;
     }
 }

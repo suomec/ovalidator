@@ -26,12 +26,12 @@ class VMax extends ValidatorBase
             case is_float($value):
             case is_int($value):
                 $size = $value;
-                $errorMessage = $this->_('number must be less than {max}', ['max' => $this->maxSize]);
+                $errorMessage = $this->_('NUM_ERROR', ['max' => $this->maxSize]);
                 break;
 
             case is_string($value):
                 $size = \mb_strlen($value);
-                $errorMessage = $this->_('string should contain at most {max} characters but contains {size}', [
+                $errorMessage = $this->_('STRING_ERROR', [
                     'max'  => $this->maxSize,
                     'size' => $size,
                 ]);
@@ -39,14 +39,14 @@ class VMax extends ValidatorBase
 
             case is_array($value):
                 $size = count($value);
-                $errorMessage = $this->_('array should contain at most {max} items but contains {size}', [
+                $errorMessage = $this->_('ARRAY_ERROR', [
                     'max'  => $this->maxSize,
                     'size' => $size,
                 ]);
                 break;
 
             default:
-                throw new EngineException($this->_('checks only numbers, strings and arrays, got: {type}', [
+                throw new EngineException($this->_('TYPE_ERROR', [
                     'type' => gettype($value),
                 ]));
         }

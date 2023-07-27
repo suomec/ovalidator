@@ -6,6 +6,7 @@ namespace OValidator\Tests\Engines;
 
 use OValidator\Engines\VString;
 use OValidator\Exceptions\EngineException;
+use OValidator\Objects\LocPhpFile;
 use PHPUnit\Framework\TestCase;
 
 class VStringTest extends TestCase
@@ -15,7 +16,7 @@ class VStringTest extends TestCase
      */
     public function testStringEngineSuccess(mixed $input, bool $trim, string $result): void
     {
-        $engine = new VString($trim);
+        $engine = $this->get($trim);
 
         $this->assertEquals($result, $engine->check($input));
     }
@@ -25,7 +26,7 @@ class VStringTest extends TestCase
         $this->expectException(EngineException::class);
         $this->expectExceptionMessage('should be string');
 
-        (new VString())->check(123);
+        ($this->get())->check(new \stdClass());
     }
 
     /**
@@ -36,6 +37,18 @@ class VStringTest extends TestCase
         return [
             [' input ', true, 'input'],
             [' input ', false, ' input '],
+            [new VStringable(), false, 'test'],
+            [123, false, '123'],
         ];
+    }
+
+    private function get(bool $trim = false): VString
+    {
+        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+
+        $v = new VString($trim);
+        $v->setLocalization($l);
+
+        return $v;
     }
 }

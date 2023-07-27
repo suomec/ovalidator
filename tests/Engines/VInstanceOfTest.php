@@ -6,6 +6,7 @@ namespace OValidator\Tests\Engines;
 
 use OValidator\Engines\VInstanceOf;
 use OValidator\Exceptions\EngineException;
+use OValidator\Objects\LocPhpFile;
 use PHPUnit\Framework\TestCase;
 
 class VInstanceOfTest extends TestCase
@@ -25,7 +26,7 @@ class VInstanceOfTest extends TestCase
         $this->expectException(EngineException::class);
         $this->expectExceptionMessage('should be instance of stdClass');
 
-        (new VInstanceOf('stdClass'))->check('test');
+        ($this->get('stdClass'))->check('test');
     }
 
     /**
@@ -36,5 +37,15 @@ class VInstanceOfTest extends TestCase
         return [
             [(object)['a' => 'b'], 'stdClass'],
         ];
+    }
+
+    private function get(string $class): VInstanceOf
+    {
+        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+
+        $v = new VInstanceOf($class);
+        $v->setLocalization($l);
+
+        return $v;
     }
 }

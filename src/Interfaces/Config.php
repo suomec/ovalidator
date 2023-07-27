@@ -42,14 +42,8 @@ interface Config
     /**
      * Validate input data against rules created in add() method for each field
      * @param array<string, mixed> $values Request data
+     * @param Localization $localization Localization config
      * @return ValidationResult result with errors and values
      */
-    public function validate(array $values): ValidationResult;
-
-    /**
-     * Sets localizer for translation
-     * @param I18n $i18n Instance
-     * @return void
-     */
-    public function setI18n(I18n $i18n): void;
+    public function validate(array $values, Localization $localization): ValidationResult;
 }

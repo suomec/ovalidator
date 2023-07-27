@@ -6,7 +6,7 @@ namespace OValidator;
 
 use OValidator\Interfaces\Config as ConfigInterface;
 use OValidator\Interfaces\Form as FormInterface;
-use OValidator\Interfaces\I18n;
+use OValidator\Interfaces\Localization;
 use OValidator\Interfaces\Setter;
 use OValidator\Interfaces\ValidationResult;
 
@@ -17,13 +17,13 @@ class Mapper
 {
     private FormInterface $form;
     private ConfigInterface $config;
-    private ?I18n $i18n;
+    private Localization $localization;
 
-    public function __construct(FormInterface $form, ConfigInterface $config, ?I18n $i18n = null)
+    public function __construct(FormInterface $form, ConfigInterface $config, Localization $localization)
     {
         $this->form = $form;
         $this->config = $config;
-        $this->i18n = $i18n;
+        $this->localization = $localization;
     }
 
     /**
@@ -34,11 +34,7 @@ class Mapper
      */
     public function toObject(object $object, Setter $setter): ?ValidationResult
     {
-        if ($this->i18n !== null) {
-            $this->config->setI18n($this->i18n);
-        }
-
-        $result = $this->config->validate($this->form->export());
+        $result = $this->config->validate($this->form->export(), $this->localization);
 
         $errors = $result->getErrors();
         if (count($errors) > 0) {
