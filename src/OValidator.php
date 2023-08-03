@@ -26,9 +26,9 @@ class OValidator
         ConfigInterface $config,
         array $input,
         object $object,
-        string $localizationName = 'en',
+        string $localizationName = 'loc-en.php',
     ): void {
-        $localization = new LocPhpFile(__DIR__ . "/../etc/{$localizationName}.php");
+        $localization = new LocPhpFile(__DIR__ . "/../etc/{$localizationName}");
 
         $form = (new Form())->fromArray($input);
         $result = (new Mapper($form, $config, $localization))->toObject($object, new ReflectionSetter());

@@ -70,7 +70,7 @@ class VMaxTest extends TestCase
 
     private function get(int $max): VMax
     {
-        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+        $l = new LocPhpFile(__DIR__ . '/../../etc/loc-en.php');
 
         $v = new VMax($max);
         $v->setLocalization($l);

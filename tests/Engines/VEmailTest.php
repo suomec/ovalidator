@@ -49,7 +49,7 @@ class VEmailTest extends TestCase
 
     private function get(): VEmail
     {
-        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+        $l = new LocPhpFile(__DIR__ . '/../../etc/loc-en.php');
 
         $v = new VEmail();
         $v->setLocalization($l);

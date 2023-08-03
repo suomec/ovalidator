@@ -50,7 +50,7 @@ class VDateTimeTest extends TestCase
 
     private function get(string $format, bool $asString = false): VDateTime
     {
-        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+        $l = new LocPhpFile(__DIR__ . '/../../etc/loc-en.php');
 
         $v = new VDateTime($format, $asString);
         $v->setLocalization($l);

@@ -22,8 +22,8 @@ class Input
 
 $input = new Input();
 
-class MyLoc implements Localization {
-
+class MyLoc implements Localization
+{
     public function _(string $validatorClass, string $messageCode, array $replaces = []): string
     {
         if ($messageCode === 'NOT_NUMERIC') {
@@ -42,6 +42,10 @@ $form = (new Form())->fromArray([
     'myField' => 'BAD_NUMBER',
 ]);
 $result = (new Mapper($form, $config, new MyLoc()))->toObject($input, new ReflectionSetter());
+
+if ($result === null) {
+    throw new \Exception('result should be not null in this example');
+}
 
 var_dump($result->getErrors());
 

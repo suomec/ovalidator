@@ -58,7 +58,7 @@ class VArrayFromJsonTest extends TestCase
 
     private function get(int $depth = 100, int $flags = 0): VArrayFromJson
     {
-        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+        $l = new LocPhpFile(__DIR__ . '/../../etc/loc-en.php');
 
         $v = new VArrayFromJson($depth, $flags);
         $v->setLocalization($l);

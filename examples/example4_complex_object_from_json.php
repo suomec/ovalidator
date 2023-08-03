@@ -19,6 +19,7 @@ class Complex implements CanBeValidated
 {
     public int $a;
 
+    /** @var int[] */
     public array $b;
 
     public SubComplex $c;

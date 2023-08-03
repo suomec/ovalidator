@@ -44,7 +44,7 @@ class VStringTest extends TestCase
 
     private function get(bool $trim = false): VString
     {
-        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+        $l = new LocPhpFile(__DIR__ . '/../../etc/loc-en.php');
 
         $v = new VString($trim);
         $v->setLocalization($l);

@@ -207,7 +207,7 @@ class VImageTest extends TestCase
     //@phpstan-ignore-next-line
     private function get(array $constraints = null, array $types = []): VImage
     {
-        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+        $l = new LocPhpFile(__DIR__ . '/../../etc/loc-en.php');
 
         $v = new VImage($constraints, $types);
         $v->setLocalization($l);

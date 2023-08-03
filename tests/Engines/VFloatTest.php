@@ -43,7 +43,7 @@ class VFloatTest extends TestCase
 
     private function get(): VFloat
     {
-        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+        $l = new LocPhpFile(__DIR__ . '/../../etc/loc-en.php');
 
         $v = new VFloat();
         $v->setLocalization($l);

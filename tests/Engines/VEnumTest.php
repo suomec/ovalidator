@@ -52,7 +52,7 @@ class VEnumTest extends TestCase
     //@phpstan-ignore-next-line
     private function get(string $class, array $disallow = []): VEnum
     {
-        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+        $l = new LocPhpFile(__DIR__ . '/../../etc/loc-en.php');
 
         $v = new VEnum($class, $disallow);
         $v->setLocalization($l);

@@ -78,7 +78,7 @@ class VArrayTest extends TestCase
     //@phpstan-ignore-next-line
     private function get(?array $validators = null, bool $onlyUnique = false, bool $keepOriginal = false): VArray
     {
-        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+        $l = new LocPhpFile(__DIR__ . '/../../etc/loc-en.php');
 
         $v = new VArray($validators, $onlyUnique, $keepOriginal);
         $v->setLocalization($l);

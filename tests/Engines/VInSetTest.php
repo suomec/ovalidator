@@ -62,7 +62,7 @@ class VInSetTest extends TestCase
     //@phpstan-ignore-next-line
     private function get(array $set): VInSet
     {
-        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+        $l = new LocPhpFile(__DIR__ . '/../../etc/loc-en.php');
 
         $v = new VInSet($set);
         $v->setLocalization($l);

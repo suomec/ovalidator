@@ -10,10 +10,11 @@ docker-rebuild:
 check:
 	./var/vendor/bin/php-cs-fixer --dry-run --using-cache=no --diff fix ./src
 	./var/vendor/bin/php-cs-fixer --dry-run --using-cache=no --diff fix ./tests
-	./var/vendor/bin/phpstan --autoload-file=./var/vendor/autoload.php analyze --level max src tests
+	./var/vendor/bin/php-cs-fixer --dry-run --using-cache=no --diff fix ./examples
+	./var/vendor/bin/phpstan --autoload-file=./var/vendor/autoload.php analyze --level max src tests examples
 
 test:
 	./var/vendor/bin/phpunit --colors=always ./tests
 
 filter-test:
-	./var/vendor/bin/phpunit --colors=always ./tests  --filter "$(FILTER)"
+	./var/vendor/bin/phpunit --colors=always ./tests --filter "$(FILTER)"

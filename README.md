@@ -60,7 +60,7 @@ setter checks types of properties via reflection and supported interfaces if pro
 ### Localization
 
 Localization files are located in /etc/ folder. There is a class for quick validation run: OValidator::validateAndSet()
-It creates localization object from default file *en.php*. You can pass path to your own file if needed.
+It creates localization object from default file *loc-en.php*. You can pass path to your own file if needed.
 
 ### Examples
 

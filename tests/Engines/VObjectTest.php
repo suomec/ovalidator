@@ -70,7 +70,7 @@ class VObjectTest extends TestCase
 
     private function get(string $class): VObject
     {
-        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+        $l = new LocPhpFile(__DIR__ . '/../../etc/loc-en.php');
 
         $v = new VObject($class);
         $v->setLocalization($l);

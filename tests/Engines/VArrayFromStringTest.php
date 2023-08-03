@@ -52,7 +52,7 @@ class VArrayFromStringTest extends TestCase
 
     private function get(string $separator = ','): VArrayFromString
     {
-        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+        $l = new LocPhpFile(__DIR__ . '/../../etc/loc-en.php');
 
         $v = new VArrayFromString($separator);
         $v->setLocalization($l);

@@ -41,7 +41,7 @@ class VInstanceOfTest extends TestCase
 
     private function get(string $class): VInstanceOf
     {
-        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+        $l = new LocPhpFile(__DIR__ . '/../../etc/loc-en.php');
 
         $v = new VInstanceOf($class);
         $v->setLocalization($l);

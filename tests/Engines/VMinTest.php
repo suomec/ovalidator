@@ -70,7 +70,7 @@ class VMinTest extends TestCase
 
     private function get(int $min): VMin
     {
-        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+        $l = new LocPhpFile(__DIR__ . '/../../etc/loc-en.php');
 
         $v = new VMin($min);
         $v->setLocalization($l);

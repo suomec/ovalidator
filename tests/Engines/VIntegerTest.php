@@ -60,7 +60,7 @@ class VIntegerTest extends TestCase
 
     private function get(): VInteger
     {
-        $l = new LocPhpFile(__DIR__ . '/../../etc/en.php');
+        $l = new LocPhpFile(__DIR__ . '/../../etc/loc-en.php');
 
         $v = new VInteger();
         $v->setLocalization($l);
