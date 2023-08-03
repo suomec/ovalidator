@@ -30,7 +30,7 @@ class OValidator
     ): void {
         $localization = new LocPhpFile(__DIR__ . "/../etc/{$localizationName}");
 
-        $form = (new Form())->fromArray($input);
+        $form = Form::make($input);
         $result = (new Mapper($form, $config, $localization))->toObject($object, new ReflectionSetter());
 
         if ($result !== null && $result->hasErrors()) {

@@ -8,7 +8,7 @@ use OValidator\Exceptions\EngineException;
 use OValidator\Objects\ValidatorBase;
 
 /**
- * Field should be instance of type
+ * Field should be an instance of type
  */
 class VInstanceOf extends ValidatorBase
 {

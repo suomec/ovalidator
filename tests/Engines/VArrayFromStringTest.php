@@ -15,9 +15,9 @@ class VArrayFromStringTest extends TestCase
      * @dataProvider providerArrayFromString
      * @param array<mixed> $result
      */
-    public function testArrayFromStringEngineSuccess(mixed $input, string $separator, array $result): void
+    public function testArrayFromStringEngineSuccess(mixed $input, string $separator, bool $excludeEmpty, array $result): void
     {
-        $engine = $this->get($separator);
+        $engine = $this->get($separator, $excludeEmpty);
 
         $this->assertEquals($result, $engine->check($input));
     }
@@ -44,17 +44,19 @@ class VArrayFromStringTest extends TestCase
     protected function providerArrayFromString(): array
     {
         return [
-            ['1,2,3', ',', ['1', '2', '3']],
-            ['', '||', []],
-            ['test value without separator', '||', ['test value without separator']],
+            ['1,2,3', ',', true, ['1', '2', '3']],
+            ['', '||', true, []],
+            ['test value without separator', '||', true, ['test value without separator']],
+            ['1|2||', '|', true, ['1', '2']],
+            ['1|2||', '|', false, ['1', '2', '', '']],
         ];
     }
 
-    private function get(string $separator = ','): VArrayFromString
+    private function get(string $separator = ',', bool $excludeEmpty = true): VArrayFromString
     {
         $l = new LocPhpFile(__DIR__ . '/../../etc/loc-en.php');
 
-        $v = new VArrayFromString($separator);
+        $v = new VArrayFromString($separator, $excludeEmpty);
         $v->setLocalization($l);
 
         return $v;

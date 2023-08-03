@@ -13,14 +13,16 @@ use OValidator\Objects\ValidatorBase;
 class VArrayFromString extends ValidatorBase
 {
     private string $separator;
+    private bool $excludeEmptyStrings;
 
-    public function __construct(string $separator = ',')
+    public function __construct(string $separator = ',', bool $excludeEmptyStrings = true)
     {
         if ($separator === '') {
             throw new \Exception("separator can't be empty");
         }
 
         $this->separator = $separator;
+        $this->excludeEmptyStrings = $excludeEmptyStrings;
     }
 
     public function check(mixed $value): mixed
@@ -38,7 +40,18 @@ class VArrayFromString extends ValidatorBase
         }
 
         //@phpstan-ignore-next-line
-        return explode($this->separator, $value);
+        $tmp = explode($this->separator, $value);
+
+        $result = [];
+        foreach ($tmp as $item) {
+            if ($this->excludeEmptyStrings && $item === '') {
+                continue;
+            }
+
+            $result[] = $item;
+        }
+
+        return $result;
     }
 
     public function getDescription(): string

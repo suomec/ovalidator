@@ -40,7 +40,7 @@ class VObject extends ValidatorBase
         }
 
         $this->className = $className;
-        $this->setter = $setter !== null ? $setter : new ReflectionSetter();
+        $this->setter = $setter ?? new ReflectionSetter();
     }
 
     public function check(mixed $value): mixed
@@ -60,7 +60,7 @@ class VObject extends ValidatorBase
         /** @var CanBeValidated $tmp */
         $tmp = new $this->className();
 
-        $mapper = new Mapper((new Form())->fromArray($value), $tmp->getValidationConfig(), $this->localization);
+        $mapper = new Mapper(Form::make($value), $tmp->getValidationConfig(), $this->localization);
         $result = $mapper->toObject($tmp, $this->setter);
         if ($result === null || !$result->hasErrors()) {
             return $tmp;

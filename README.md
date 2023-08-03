@@ -51,6 +51,11 @@ $result = (new Mapper($form, $config))->toObject($input, new ReflectionSetter())
 If you have an input: `['field_2' => 15]` it's correct and `$input->field_2` will have a value of `15`. But for
 input `['field_2' => 999]` `$result` variable will contain a list of errors (VMax check fails, because 999 > 20).
 
+### Validators
+
+Builtin validator are described in [validators.md](validators.md) file. You can create own validator which
+should implement `Validator` interface.
+
 ### Setters
 
 Setters are special objects which map validated input to your object. There are two default setters - **Direct** and 

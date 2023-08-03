@@ -38,7 +38,7 @@ $config = (new Config())
     ->add('myField', 'Field', State::Required, [new VInteger()])
 ;
 
-$form = (new Form())->fromArray([
+$form = Form::make([
     'myField' => 'BAD_NUMBER',
 ]);
 $result = (new Mapper($form, $config, new MyLoc()))->toObject($input, new ReflectionSetter());

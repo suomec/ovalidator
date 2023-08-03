@@ -16,6 +16,17 @@ class Form implements FormInterface
         $this->values = [];
     }
 
+    /**
+     * Fast Form creation
+     * @param array<string, mixed> $values
+     * @return FormInterface
+     * @throws \Exception
+     */
+    public static function make(array $values): FormInterface
+    {
+        return (new self())->fromArray($values);
+    }
+
     public function fromArray(array $data): FormInterface
     {
         foreach ($data as $k => $v) {
