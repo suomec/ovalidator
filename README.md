@@ -51,6 +51,10 @@ $result = (new Mapper($form, $config))->toObject($input, new ReflectionSetter())
 If you have an input: `['field_2' => 15]` it's correct and `$input->field_2` will have a value of `15`. But for
 input `['field_2' => 999]` `$result` variable will contain a list of errors (VMax check fails, because 999 > 20).
 
+### Installation
+
+Run: `composer require suomec/ovalidator`
+
 ### Validators
 
 Builtin validator are described in [validators.md](validators.md) file. You can create own validator which
