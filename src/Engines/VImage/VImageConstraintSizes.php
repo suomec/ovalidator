@@ -31,7 +31,7 @@ class VImageConstraintSizes extends ConstraintBase
 
     public function check(array $imageSizes, string $content, \GdImage $resource): bool
     {
-        if ($this->maxSizeKb !== null && strlen($content) > $this->maxSizeKb*1024) {
+        if ($this->maxSizeKb !== null && strlen($content) > $this->maxSizeKb * 1024) {
             return $this->setLastError('image size more than limit ({limit}Kb)', ['limit' => $this->maxSizeKb]);
         }
 

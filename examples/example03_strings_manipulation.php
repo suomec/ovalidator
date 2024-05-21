@@ -28,7 +28,7 @@ $config = (new Config())
         new VArray([
             new VInteger(),
             new VCallback(function (int $input) {
-                return $input*2;
+                return $input * 2;
             }),
         ], true),
     ])

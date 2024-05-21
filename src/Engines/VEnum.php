@@ -12,7 +12,7 @@ use OValidator\Objects\ValidatorBase;
  */
 class VEnum extends ValidatorBase
 {
-    /** @var \ReflectionEnumBackedCase[] */
+    /** @var \ReflectionEnumUnitCase[] */
     private array $cases;
     /** @var array<mixed> */
     private array $disallowCases;
