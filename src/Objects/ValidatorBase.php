@@ -17,7 +17,7 @@ abstract class ValidatorBase implements Validator
     }
 
     /**
-     * @param string $code Error message key
+     * @param string $code Error message key (default location is /etc/loc-*.php)
      * @param array<string, string|int> $replaces Replaces for localization
      * @return string Localized message
      */

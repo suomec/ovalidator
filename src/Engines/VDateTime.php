@@ -17,7 +17,7 @@ class VDateTime extends ValidatorBase
 
     /**
      * @param string $format Date format
-     * @param bool $forceAsString Should return result date as string, not DateTimeImmutable
+     * @param bool $forceAsString Should return result date as formatted string, not DateTimeImmutable
      */
     public function __construct(string $format, bool $forceAsString = false)
     {
@@ -37,6 +37,18 @@ class VDateTime extends ValidatorBase
             $instance = \DateTimeImmutable::createFromFormat($this->format, trim($value));
             if (is_bool($instance)) {
                 throw new EngineException($this->_('CANT_PARSE', [
+                    'format' => $this->format,
+                ]));
+            }
+
+            $lastErrors = \DateTime::getLastErrors();
+            if (is_array($lastErrors) && $lastErrors['warning_count'] > 0) {
+                throw new EngineException($this->_('CANT_PARSE_IF_WARNINGS', [
+                    'format' => $this->format,
+                ]));
+            }
+            if (is_array($lastErrors) && $lastErrors['error_count'] > 0) {
+                throw new EngineException($this->_('CANT_PARSE_IF_ERRORS', [
                     'format' => $this->format,
                 ]));
             }

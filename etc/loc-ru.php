@@ -13,10 +13,12 @@ return [
         'NOT_STRING' => 'значение должно быть строкой',
     ],
     'VBool' => [
-        'BAD_FORMAT' => 'невозможно распарсить формат',
+        'BAD_FORMAT' => 'невозможно декодировать формат',
     ],
     'VDateTime' => [
-        'CANT_PARSE' => "невозможно распарсить формат: {format}",
+        'CANT_PARSE' => 'невозможно декодировать формат: {format}',
+        'CANT_PARSE_IF_WARNINGS' => 'невозможно декодировать формат: {format}',
+        'CANT_PARSE_IF_ERRORS' => 'невозможно декодировать формат: {format}',
         'BAD_TYPE' => 'должно быть строкой или DateTimeImmutable',
     ],
     'VEmail' => [
@@ -25,6 +27,9 @@ return [
     ],
     'VEnum' => [
         'CASE_NOT_FOUND' => 'значение не найдено среди: {names}',
+    ],
+    'VFail' => [
+        'ERROR' => '{error}',
     ],
     'VFloat' => [
         'NOT_FLOAT' => 'не число с плавающей точкой',
@@ -66,6 +71,11 @@ return [
     'VObject' => [
         'SHOULD_BE_ARRAY' => 'значение должно быть массивом',
         'VALIDATION_ERROR' => 'ошибка валидации объекта[{error}]',
+    ],
+    'VRegExpMatch' => [
+        'SHOULD_BE_STRING' => 'должно быть строкой',
+        'NOT_MATCHED' => 'строка не соответствует регулярному выражению: {regexp}',
+        'REGEXP_ERROR' => 'ошибка запуска проверки регулярного выражения: {message}',
     ],
     'VString' => [
         'SHOULD_BE_STRING' => 'должно быть строкой',

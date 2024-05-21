@@ -29,6 +29,14 @@ class VDateTimeTest extends TestCase
         ($this->get('Y-m-d'))->check('0002-test');
     }
 
+    public function testDateTimeEngineFailedIfDateNotGood(): void
+    {
+        $this->expectException(EngineException::class);
+        $this->expectExceptionMessage("can't parse date for format: Y-m-d");
+
+        ($this->get('Y-m-d'))->check('2000-01-35');
+    }
+
     public function testDateTimeEngineFailedIfInputTypeIncorrect(): void
     {
         $this->expectException(EngineException::class);

@@ -17,6 +17,8 @@ return [
     ],
     'VDateTime' => [
         'CANT_PARSE' => "can't parse date for format: {format}",
+        'CANT_PARSE_IF_WARNINGS' => "can't parse date for format: {format}",
+        'CANT_PARSE_IF_ERRORS' => "can't parse date for format: {format}",
         'BAD_TYPE' => 'should be string or DateTimeImmutable',
     ],
     'VEmail' => [
@@ -25,6 +27,9 @@ return [
     ],
     'VEnum' => [
         'CASE_NOT_FOUND' => 'case not found in: {names}',
+    ],
+    'VFail' => [
+        'ERROR' => '{error}',
     ],
     'VFloat' => [
         'NOT_FLOAT' => 'is not float',
@@ -66,6 +71,11 @@ return [
     'VObject' => [
         'SHOULD_BE_ARRAY' => 'value should be array',
         'VALIDATION_ERROR' => 'object validation error[{error}]',
+    ],
+    'VRegExpMatch' => [
+        'SHOULD_BE_STRING' => 'should be string',
+        'NOT_MATCHED' => 'input not matched to regexp: {regexp}',
+        'REGEXP_ERROR' => 'regular expression is invalid: {message}',
     ],
     'VString' => [
         'SHOULD_BE_STRING' => 'should be string',

@@ -11,7 +11,7 @@ use OValidator\Objects\State;
 use OValidator\OValidator;
 
 /**
- * Comples JSON transformations
+ * Complex JSON transformations
  */
 
 class Input
